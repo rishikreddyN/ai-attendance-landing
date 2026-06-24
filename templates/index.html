@@ -1,327 +1,331 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SnapClass | AI Powered Attendance System</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/logo.png') }}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SnapClass | AI Powered Attendance System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root, [data-theme="dark"] {
+      --bg-base:#0d0618; --bg-surface:#160a2e; --bg-alt:#0d0618;
+      --bg-card:rgba(255,255,255,0.04); --border:rgba(255,255,255,0.08);
+      --border-hover:rgba(168,85,247,0.4);
+      --text-primary:#ffffff; --text-secondary:#d1d5db; --text-muted:#9ca3af; --text-faint:#6b7280;
+      --accent:#7c3aed; --accent-bright:#a855f7; --accent-glow:#c084fc; --accent-mid:#2d1260;
+      --hero-glow:rgba(124,58,237,0.35); --hero-glow2:rgba(168,85,247,0.08);
+      --badge-bg:rgba(124,58,237,0.15); --badge-border:rgba(168,85,247,0.4);
+      --nav-bg:rgba(13,6,24,0.82); --footer-bg:#08030f;
+      --stat-border:rgba(255,255,255,0.08);
+      --visual-bg:linear-gradient(145deg,rgba(124,58,237,0.12),rgba(168,85,247,0.05));
+      --visual-stripe:rgba(255,255,255,0.015);
+      --toggle-track:rgba(255,255,255,0.12); --toggle-thumb:#a855f7;
+      --card-shadow:none;
+      --section-a-bg:#160a2e; --section-b-bg:#0d0618;
+    }
+
+    [data-theme="light"] {
+      --bg-base:#f8f5ff; --bg-surface:#ffffff; --bg-alt:#f0eaff;
+      --bg-card:rgba(124,58,237,0.04); --border:rgba(124,58,237,0.13);
+      --border-hover:rgba(124,58,237,0.45);
+      --text-primary:#0f0520; --text-secondary:#3b1f6e; --text-muted:#5f3f90; --text-faint:#8b6cb5;
+      --accent:#7c3aed; --accent-bright:#9333ea; --accent-glow:#6d28d9; --accent-mid:#ede9fe;
+      --hero-glow:rgba(124,58,237,0.1); --hero-glow2:rgba(124,58,237,0.05);
+      --badge-bg:rgba(124,58,237,0.08); --badge-border:rgba(124,58,237,0.28);
+      --nav-bg:rgba(248,245,255,0.9); --footer-bg:#ede9fe;
+      --stat-border:rgba(124,58,237,0.14);
+      --visual-bg:linear-gradient(145deg,rgba(124,58,237,0.07),rgba(168,85,247,0.03));
+      --visual-stripe:rgba(124,58,237,0.025);
+      --toggle-track:rgba(124,58,237,0.15); --toggle-thumb:#7c3aed;
+      --card-shadow:0 2px 16px rgba(124,58,237,0.07);
+      --section-a-bg:#ffffff; --section-b-bg:#f8f5ff;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family:'Inter',sans-serif; background:var(--bg-base); color:var(--text-primary); overflow-x:hidden; transition:background .3s,color .3s; }
+
+    /* TOGGLE */
+    .theme-toggle { display:flex; align-items:center; gap:8px; cursor:pointer; user-select:none; }
+    .toggle-track { width:44px; height:24px; border-radius:999px; background:var(--toggle-track); border:1px solid var(--border); position:relative; transition:background .3s; flex-shrink:0; }
+    .toggle-thumb { position:absolute; top:3px; left:3px; width:16px; height:16px; border-radius:50%; background:var(--toggle-thumb); transition:transform .25s cubic-bezier(.4,0,.2,1); }
+    [data-theme="light"] .toggle-thumb { transform:translateX(20px); }
+    .t-ico { font-size:14px; line-height:1; }
+
+    /* NAV */
+    .navbar { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:15px 48px; background:var(--nav-bg); backdrop-filter:blur(18px); border-bottom:1px solid var(--border); transition:background .3s; }
+    .logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
+    .logo-icon { width:34px; height:34px; border-radius:10px; background:linear-gradient(135deg,var(--accent),var(--accent-bright)); display:flex; align-items:center; justify-content:center; font-size:18px; }
+    .logo-text { font-family:'Syne',sans-serif; font-weight:800; font-size:1.15rem; letter-spacing:-0.02em; color:var(--text-primary); }
+    .nav-links { display:flex; gap:30px; }
+    .nav-links a { color:var(--text-muted); text-decoration:none; font-size:0.9rem; font-weight:500; transition:color .2s; }
+    .nav-links a:hover { color:var(--text-primary); }
+    .nav-right { display:flex; align-items:center; gap:16px; }
+    .btn-pill { display:inline-flex; align-items:center; gap:6px; padding:9px 20px; border-radius:999px; background:var(--accent); color:#fff; font-size:0.85rem; font-weight:600; text-decoration:none; transition:background .2s,transform .15s; }
+    .btn-pill:hover { background:var(--accent-bright); transform:translateY(-1px); }
+
+    /* HERO */
+    .hero { min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:120px 24px 80px; background:radial-gradient(ellipse 80% 60% at 50% 0%,var(--hero-glow) 0%,transparent 70%),var(--bg-base); position:relative; overflow:hidden; transition:background .3s; }
+    .hero::before { content:''; position:absolute; inset:0; background:radial-gradient(circle 600px at 20% 80%,var(--hero-glow2) 0%,transparent 60%); pointer-events:none; }
+    .badge { display:inline-flex; align-items:center; gap:8px; padding:6px 16px; border-radius:999px; border:1px solid var(--badge-border); background:var(--badge-bg); font-size:0.78rem; font-weight:600; letter-spacing:0.08em; color:var(--accent-bright); text-transform:uppercase; margin-bottom:28px; }
+    [data-theme="light"] .badge { color:var(--accent); }
+    .badge::before { content:'●'; font-size:8px; color:var(--accent-bright); }
+    h1 { font-family:'Syne',sans-serif; font-size:clamp(3rem,8vw,6.5rem); font-weight:800; line-height:1; letter-spacing:-0.03em; margin-bottom:24px; color:var(--text-primary); }
+    h1 span { background:linear-gradient(120deg,var(--accent-bright),var(--accent-glow)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    [data-theme="light"] h1 span { background:linear-gradient(120deg,var(--accent),#9333ea); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .hero > p { max-width:580px; font-size:1.1rem; color:var(--text-secondary); line-height:1.7; margin-bottom:40px; }
+    .hero-actions { display:flex; gap:16px; align-items:center; flex-wrap:wrap; justify-content:center; }
+    .btn-cta { display:inline-flex; align-items:center; gap:8px; padding:14px 28px; border-radius:20px; background:linear-gradient(135deg,var(--accent),var(--accent-bright)); color:#fff; font-weight:700; font-size:1rem; text-decoration:none; box-shadow:0 4px 30px rgba(124,58,237,0.35); transition:transform .2s,box-shadow .2s; }
+    .btn-cta:hover { transform:translateY(-2px); box-shadow:0 8px 40px rgba(124,58,237,0.5); }
+    .link-action { color:var(--text-muted); text-decoration:none; font-weight:500; font-size:0.95rem; transition:color .2s; }
+    .link-action:hover { color:var(--text-primary); }
+    .hero-stats { display:flex; gap:14px; margin-top:64px; flex-wrap:wrap; justify-content:center; }
+    .stat-pill { padding:10px 20px; border-radius:999px; border:1px solid var(--stat-border); background:var(--bg-card); font-size:0.85rem; color:var(--text-secondary); }
+    .stat-pill strong { color:var(--text-primary); font-weight:700; }
+
+    /* SECTIONS */
+    .sec-a { background:var(--section-a-bg); transition:background .3s; padding:100px 48px; }
+    .sec-b { background:var(--section-b-bg); transition:background .3s; padding:100px 48px; }
+    .section-eyebrow { text-align:center; font-size:0.75rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--accent); font-weight:600; margin-bottom:14px; }
+    [data-theme="dark"] .section-eyebrow { color:var(--accent-bright); }
+    .section-title { font-family:'Syne',sans-serif; font-size:clamp(2rem,4vw,3rem); font-weight:800; text-align:center; letter-spacing:-0.02em; margin-bottom:56px; color:var(--text-primary); }
+
+    /* FEATURE CARDS */
+    .feature-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:24px; max-width:1100px; margin:0 auto; }
+    .feature-card { padding:36px 28px; border-radius:20px; border:1px solid var(--border); background:var(--bg-card); box-shadow:var(--card-shadow); transition:border-color .2s,transform .2s; }
+    [data-theme="light"] .feature-card { background:#fff; }
+    .feature-card:hover { border-color:var(--border-hover); transform:translateY(-4px); }
+    .f-icon { width:52px; height:52px; border-radius:14px; background:linear-gradient(135deg,var(--accent-mid),var(--accent)); display:flex; align-items:center; justify-content:center; font-size:24px; margin-bottom:20px; }
+    [data-theme="light"] .f-icon { background:linear-gradient(135deg,#ddd6fe,#7c3aed); }
+    .feature-card h3 { font-size:1.1rem; font-weight:700; margin-bottom:10px; color:var(--text-primary); }
+    .feature-card p { color:var(--text-muted); font-size:0.92rem; line-height:1.65; }
+
+    /* FLOW */
+    .flow-container { max-width:1000px; margin:0 auto; }
+    .flow-step { display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center; margin-bottom:100px; }
+    .flow-step:last-child { margin-bottom:0; }
+    .flow-step:nth-child(even) .flow-content { order:2; }
+    .flow-step:nth-child(even) .flow-visual  { order:1; }
+    .step-badge { display:inline-block; padding:4px 12px; border-radius:999px; border:1px solid var(--badge-border); background:var(--badge-bg); font-size:0.72rem; font-weight:700; letter-spacing:0.1em; color:var(--accent); text-transform:uppercase; margin-bottom:16px; }
+    [data-theme="dark"] .step-badge { color:var(--accent-bright); }
+    .flow-content h3 { font-family:'Syne',sans-serif; font-size:1.8rem; font-weight:800; letter-spacing:-0.02em; margin-bottom:14px; line-height:1.15; color:var(--text-primary); }
+    .flow-content p { color:var(--text-muted); line-height:1.7; font-size:0.95rem; max-width:380px; }
+    .flow-visual { border-radius:32px; border:1px solid var(--border); background:var(--visual-bg); min-height:240px; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; transition:background .3s,border-color .3s; box-shadow:var(--card-shadow); }
+    .flow-visual::before { content:''; position:absolute; inset:0; background:repeating-linear-gradient(45deg,transparent,transparent 20px,var(--visual-stripe) 20px,var(--visual-stripe) 21px); }
+    .flow-visual-inner { z-index:1; text-align:center; display:flex; flex-direction:column; align-items:center; gap:12px; }
+    .flow-visual-icon { font-size:48px; }
+    .flow-visual-label { font-size:0.78rem; font-weight:600; letter-spacing:0.08em; color:var(--accent); text-transform:uppercase; }
+    [data-theme="dark"] .flow-visual-label { color:var(--accent-bright); }
+
+    /* TECH */
+    .tech-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px; max-width:1100px; margin:0 auto; }
+    .tech-card { padding:28px 24px; border-radius:14px; border:1px solid var(--border); background:var(--bg-card); box-shadow:var(--card-shadow); display:flex; flex-direction:column; gap:10px; position:relative; overflow:hidden; transition:border-color .2s,transform .2s; }
+    [data-theme="light"] .tech-card { background:#fff; }
+    .tech-card::after { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--accent),var(--accent-bright)); opacity:0; transition:opacity .2s; }
+    .tech-card:hover { border-color:var(--border-hover); transform:translateY(-3px); }
+    .tech-card:hover::after { opacity:1; }
+    .t-icon { font-size:26px; }
+    .tech-tag { display:inline-block; padding:2px 10px; border-radius:999px; background:var(--badge-bg); border:1px solid var(--badge-border); font-size:0.68rem; font-weight:700; letter-spacing:0.1em; color:var(--accent); text-transform:uppercase; width:fit-content; }
+    [data-theme="dark"] .tech-tag { color:var(--accent-bright); }
+    .tech-card h4 { font-weight:700; font-size:0.95rem; color:var(--text-primary); }
+    .tech-card p { color:var(--text-muted); font-size:0.82rem; line-height:1.55; }
+
+    /* CTA */
+    .cta-wrap { padding:0 48px 80px; }
+    .cta-banner { padding:72px 48px; border-radius:32px; background:linear-gradient(135deg,var(--accent-mid),var(--accent)); text-align:center; position:relative; overflow:hidden; }
+    [data-theme="light"] .cta-banner { background:linear-gradient(135deg,var(--accent),#9333ea); }
+    .cta-banner::before { content:''; position:absolute; top:-60px; right:-60px; width:300px; height:300px; border-radius:50%; background:rgba(255,255,255,0.06); pointer-events:none; }
+    .cta-banner h2 { font-family:'Syne',sans-serif; font-size:2.6rem; font-weight:800; margin-bottom:16px; letter-spacing:-0.02em; color:#fff; }
+    .cta-banner p { color:rgba(255,255,255,0.8); max-width:560px; margin:0 auto 36px; line-height:1.65; }
+    .btn-white { display:inline-flex; align-items:center; gap:8px; padding:14px 30px; border-radius:20px; background:#fff; color:var(--accent); font-weight:700; font-size:0.95rem; text-decoration:none; transition:transform .2s,box-shadow .2s; box-shadow:0 4px 20px rgba(0,0,0,0.15); }
+    .btn-white:hover { transform:translateY(-2px); box-shadow:0 8px 32px rgba(0,0,0,0.2); }
+
+    /* FOOTER */
+    footer { background:var(--footer-bg); border-top:1px solid var(--border); padding:64px 48px 32px; transition:background .3s; }
+    .footer-grid { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:48px; max-width:1100px; margin:0 auto 48px; }
+    .footer-brand p { color:var(--text-faint); font-size:0.88rem; line-height:1.65; max-width:260px; margin-top:14px; }
+    .footer-links h4 { font-size:0.8rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:16px; }
+    .footer-links ul { list-style:none; display:flex; flex-direction:column; gap:10px; }
+    .footer-links a { color:var(--text-faint); text-decoration:none; font-size:0.88rem; transition:color .2s; }
+    .footer-links a:hover { color:var(--text-secondary); }
+    .footer-bottom { max-width:1100px; margin:0 auto; padding-top:24px; border-top:1px solid var(--border); text-align:center; color:var(--text-faint); font-size:0.82rem; }
+
+    @media (max-width:768px) {
+      .navbar { padding:14px 20px; } .nav-links { display:none; }
+      .hero { padding:100px 20px 60px; }
+      .sec-a,.sec-b { padding:72px 20px; }
+      .flow-step { grid-template-columns:1fr; gap:36px; }
+      .flow-step:nth-child(even) .flow-content,.flow-step:nth-child(even) .flow-visual { order:unset; }
+      .flow-content p { max-width:100%; }
+      .footer-grid { grid-template-columns:1fr 1fr; gap:32px; }
+      .cta-wrap { padding:0 20px 60px; } .cta-banner { padding:48px 24px; } .cta-banner h2 { font-size:1.8rem; }
+    }
+  </style>
 </head>
-
 <body>
-    <nav class="navbar">
-        <div class="logo">
-            <img src="{{ url_for('static', filename='img/app_logo.png') }}" alt="SnapClass Logo" style="height: 32px;">
-            <div class="logo-text">SnapClass</div>
-        </div>
-        <div class="nav-links">
-            <a href="#">Home</a>
-            <a href="#features">Features</a>
-            <a href="#journey">Journey</a>
-            <a href="#tech">Tech Stack</a>
-        </div>
-        <div class="nav-cta">
-            <a href="https://snapclass123.streamlit.app/" class="btn-pill">Start AI Attendance <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2">
-                    <path d="M9 5l7 7-7 7" />
-                </svg></a>
-        </div>
-    </nav>
 
-    <header class="hero">
-        <div class="badge">
-            Welcome to SnapClass
-        </div>
+<nav class="navbar">
+  <a href="#" class="logo">
+    <div class="logo-icon">📸</div>
+    <div class="logo-text">SnapClass</div>
+  </a>
+  <div class="nav-links">
+    <a href="#">Home</a>
+    <a href="#features">Features</a>
+    <a href="#journey">Journey</a>
+    <a href="#tech">Tech Stack</a>
+  </div>
+  <div class="nav-right">
+    <div class="theme-toggle" onclick="toggleTheme()" role="button" aria-label="Toggle light/dark mode" title="Toggle theme">
+      <span class="t-ico">🌙</span>
+      <div class="toggle-track"><div class="toggle-thumb"></div></div>
+      <span class="t-ico">☀️</span>
+    </div>
+    <a href="https://snapclass123.streamlit.app/" class="btn-pill">
+      Start AI Attendance
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+</nav>
 
-        <h1>AI Powered<br>Attendance <span>System</span></h1>
+<header class="hero">
+  <div class="badge">Welcome to SnapClass</div>
+  <h1>AI Powered<br>Attendance <span>System</span></h1>
+  <p>Revolutionizing the classroom with next-gen computer vision and voice biometrics. Trusted by educators for speed, accuracy, and security.</p>
+  <div class="hero-actions">
+    <a href="https://snapclass123.streamlit.app/" class="btn-cta">
+      Start AI Attendance
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 5l7 7-7 7"/></svg>
+    </a>
+    <a href="#journey" class="link-action">Explore Journey →</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-pill"><strong>Face + Voice</strong> Biometrics</div>
+    <div class="stat-pill"><strong>Real-time</strong> Recognition</div>
+    <div class="stat-pill"><strong>Zero</strong> Manual Entry</div>
+    <div class="stat-pill"><strong>Cloud</strong> Synced</div>
+  </div>
+</header>
 
-        <p>Revolutionizing the classroom with next-gen computer vision and voice biometrics. Trusted by educators for
-            speed, accuracy, and security.</p>
+<section id="features" class="sec-a">
+  <div class="section-eyebrow">What we offer</div>
+  <h2 class="section-title">Innovative Features</h2>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="f-icon">📸</div>
+      <h3>AI Face Analysis</h3>
+      <p>Advanced neural networks recognize every student's face from a single class photo, making attendance instant and accurate.</p>
+    </div>
+    <div class="feature-card">
+      <div class="f-icon">🎙️</div>
+      <h3>Sequential Voice ID</h3>
+      <p>Students say "Present" one-by-one, and our audio-AI matches their voice biometrics against stored embeddings in real-time.</p>
+    </div>
+    <div class="feature-card">
+      <div class="f-icon">📱</div>
+      <h3>QR-Driven Enrollment</h3>
+      <p>Course codes generate unique QR codes for instant student enrollment. No more manual entry or data management headaches.</p>
+    </div>
+  </div>
+</section>
 
-        <div class="hero-actions">
-            <a href="https://snapclass123.streamlit.app/" class="btn-cta">Start AI Attendance <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="3">
-                    <path d="M9 5l7 7-7 7" />
-                </svg></a>
-            <a href="#journey" class="link-action">Explore Journey</a>
-        </div>
+<section id="journey" class="sec-b">
+  <div class="flow-container">
+    <div class="section-eyebrow">Workflow</div>
+    <h2 class="section-title">The Teacher's Journey</h2>
+    <div class="flow-step">
+      <div class="flow-content"><span class="step-badge">Step 01</span><h3>Secure Login</h3><p>Start your session with our high-security authentication portal. Your data is encrypted and synced across all your devices.</p></div>
+      <div class="flow-visual"><div class="flow-visual-inner"><div class="flow-visual-icon">🔐</div><div class="flow-visual-label">Authentication Portal</div></div></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-content"><span class="step-badge">Step 02</span><h3>Interactive Dashboard</h3><p>Manage all your subjects, attendance logs, and student rosters from a single, beautiful unified stream.</p></div>
+      <div class="flow-visual"><div class="flow-visual-inner"><div class="flow-visual-icon">📊</div><div class="flow-visual-label">Teacher Dashboard</div></div></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-content"><span class="step-badge">Step 03</span><h3>Course Management</h3><p>Creating a new subject is a breeze. Just name it, and SnapClass generates everything you need to start tracking.</p></div>
+      <div class="flow-visual"><div class="flow-visual-inner"><div class="flow-visual-icon">📚</div><div class="flow-visual-label">Course Creator</div></div></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-content"><span class="step-badge">Step 04</span><h3>FaceID Attendance</h3><p>Use high-speed computer vision to scan the entire room. Our AI identifies every student from a single class photo in milliseconds.</p></div>
+      <div class="flow-visual"><div class="flow-visual-inner"><div class="flow-visual-icon">👁️</div><div class="flow-visual-label">Face Recognition</div></div></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-content"><span class="step-badge">Step 05</span><h3>Voice ID Attendance</h3><p>Switch to voice mode for a futuristic roll-call. Students speak sequentially, and our AI matches their unique voice signatures.</p></div>
+      <div class="flow-visual"><div class="flow-visual-inner"><div class="flow-visual-icon">🎙️</div><div class="flow-visual-label">Voice Recognition</div></div></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-content"><span class="step-badge">Step 06</span><h3>Actionable Records</h3><p>Review and manage historical logs. View confidence scores, download CSV reports, and track long-term attendance trends.</p></div>
+      <div class="flow-visual"><div class="flow-visual-inner"><div class="flow-visual-icon">📋</div><div class="flow-visual-label">Attendance Records</div></div></div>
+    </div>
+  </div>
+</section>
 
+<section id="tech" class="sec-a">
+  <div class="section-eyebrow">Our Backend</div>
+  <h2 class="section-title">Advanced Tech Stack</h2>
+  <div class="tech-grid">
+    <div class="tech-card"><div class="t-icon">⚡</div><span class="tech-tag">Platform</span><h4>Streamlit & Flask</h4><p>Reactive frontend architecture paired with a robust Flask landing layer.</p></div>
+    <div class="tech-card"><div class="t-icon">👁️</div><span class="tech-tag">Vision AI</span><h4>Face Recognition</h4><p>Leveraging FaceRecognition and Dlib for high-fidelity facial biometrics.</p></div>
+    <div class="tech-card"><div class="t-icon">🎙️</div><span class="tech-tag">Audio AI</span><h4>Voice Embeddings</h4><p>Utilizing Resemblyzer and Librosa for unique student voice signatures.</p></div>
+    <div class="tech-card"><div class="t-icon">☁️</div><span class="tech-tag">Storage</span><h4>Supabase Cloud</h4><p>Real-time PostgreSQL infrastructure with secure auth and sync.</p></div>
+  </div>
+</section>
 
+<section id="student-journey" class="sec-b">
+  <div class="flow-container">
+    <div class="section-eyebrow">Workflow</div>
+    <h2 class="section-title">The Student's Journey</h2>
+    <div class="flow-step">
+      <div class="flow-content"><span class="step-badge">Phase 01</span><h3>Instant Enrollment</h3><p>Students join courses in seconds using unique QR codes or course links provided by their teachers. No tedious sign-up forms.</p></div>
+      <div class="flow-visual"><div class="flow-visual-inner"><div class="flow-visual-icon">📲</div><div class="flow-visual-label">QR Enrollment</div></div></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-content"><span class="step-badge">Phase 02</span><h3>Biometric Registration</h3><p>Students register their FaceID and VoiceID once. Our AI securely stores these biometrics for all future class sessions.</p></div>
+      <div class="flow-visual"><div class="flow-visual-inner"><div class="flow-visual-icon">🪪</div><div class="flow-visual-label">Biometric Setup</div></div></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-content"><span class="step-badge">Phase 03</span><h3>Personal Dashboard</h3><p>A unified view for students to track their attendance percentage across all subjects and receive real-time updates.</p></div>
+      <div class="flow-visual"><div class="flow-visual-inner"><div class="flow-visual-icon">📈</div><div class="flow-visual-label">Student Portal</div></div></div>
+    </div>
+  </div>
+</section>
 
-        <div class="floating-card card-left">
-            <div class="card-img"><img
-                    src="{{ url_for('static', filename='img/demo/snap-teacher-flow-5.2-photo-attendance.png') }}"
-                    alt="Snap Student"></div>
-        </div>
+<div class="cta-wrap">
+  <div class="cta-banner">
+    <h2>Ready to upgrade your classroom?</h2>
+    <p>Join thousands of educators who have simplified their day with SnapClass. The smartest AI powered attendance system is just one click away.</p>
+    <a href="https://snapclass123.streamlit.app/" class="btn-white">Start AI Attendance Now →</a>
+  </div>
+</div>
 
-        <div class="floating-card card-right">
-            <div class="card-img"><img src="{{ url_for('static', filename='img/demo/snap-landing.png') }}"
-                    alt="Snap Landing"></div>
-        </div>
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo">
+        <div class="logo-icon">📸</div>
+        <div class="logo-text">SnapClass</div>
+      </div>
+      <p>The next generation of classroom management, powered by advanced AI biometrics. Join the future of education today.</p>
+    </div>
+    <div class="footer-links"><h4>Product</h4><ul><li><a href="#features">AI Attendance</a></li><li><a href="#features">Smart Roster</a></li><li><a href="#tech">Tech Stack</a></li><li><a href="#student-journey">Student Portal</a></li></ul></div>
+    <div class="footer-links"><h4>Experience</h4><ul><li><a href="#journey">Teacher Journey</a></li><li><a href="#student-journey">Student Journey</a></li><li><a href="#features">Voice ID Roll-call</a></li><li><a href="#features">FaceID Scan</a></li></ul></div>
+    <div class="footer-links"><h4>Company</h4><ul><li><a href="#">About Us</a></li><li><a href="#">How it Works</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms of Use</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><p>&copy; 2026 SnapClass AI. All rights reserved.</p></div>
+</footer>
 
-
-    </header>
-
-    <section id="features" class="features">
-        <h2>Innovative Features</h2>
-        <div class="feature-grid">
-            <div class="feature-card">
-                <div class="f-icon-box">📸</div>
-                <h3>AI Face Analysis</h3>
-                <p>Advanced neural networks recognize every student's face from a single class photo, making attendance
-                    instant and accurate.</p>
-            </div>
-            <div class="feature-card">
-                <div class="f-icon-box">🎙️</div>
-                <h3>Sequential Voice ID</h3>
-                <p>Students say "Present" one-by-one, and our audio-AI matches their voice biometrics against stored
-                    embeddings in real-time.</p>
-            </div>
-            <div class="feature-card">
-                <div class="f-icon-box">📱</div>
-                <h3>QR-Driven Roster</h3>
-                <p>Course codes generate unique QR codes for instant student enrollment. No more manual entry or data
-                    management headaches.</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="journey" class="teacher-flow">
-        <div class="flow-container">
-            <div class="section-tag" style="text-align: center; display: block; margin-bottom: 40px;">— Workflow —</div>
-            <h2 style="text-align: center; font-size: 3.5rem; margin-bottom: 80px;">The Teacher's Journey</h2>
-
-            <div class="flow-step">
-                <div class="flow-content">
-                    <span class="step-badge">Step 01</span>
-                    <h3>Secure Login</h3>
-                    <p>Start your session with our high-security authentication portal. Your data is encrypted and
-                        synced across all your devices.</p>
-                </div>
-                <div class="flow-image">
-                    <img src="{{ url_for('static', filename='img/demo/snap-teacher-flow-1-login.png') }}"
-                        alt="Login Portal">
-                </div>
-            </div>
-
-            <div class="flow-step">
-                <div class="flow-content">
-                    <span class="step-badge">Step 02</span>
-                    <h3>Interactive Dashboard</h3>
-                    <p>Manage all your subjects, attendance logs, and student rosters from a single, beautiful unified
-                        stream.</p>
-                </div>
-                <div class="flow-image">
-                    <img src="{{ url_for('static', filename='img/demo/snap-teacher-flow-2-dashboard.png') }}"
-                        alt="Teacher Dashboard">
-                </div>
-            </div>
-
-            <div class="flow-step">
-                <div class="flow-content">
-                    <span class="step-badge">Step 03</span>
-                    <h3>Course Management</h3>
-                    <p>Creating a new subject is a breeze. Just name it, and SnapClass generates everything you need to
-                        start tracking.</p>
-                </div>
-                <div class="flow-image">
-                    <img src="{{ url_for('static', filename='img/demo/snap-teacher-flow-3-create-course.png') }}"
-                        alt="Create Course">
-                </div>
-            </div>
-
-            <div class="flow-step">
-                <div class="flow-content">
-                    <span class="step-badge">Step 04</span>
-                    <h3>FaceID Attendance</h3>
-                    <p>Use high-speed computer vision to scan the entire room. Our AI identifies every student from a
-                        single class photo in milliseconds.</p>
-                </div>
-                <div class="flow-image">
-                    <img src="{{ url_for('static', filename='img/demo/snap-teacher-flow-5.2-photo-attendance.png') }}"
-                        alt="FaceID Attendance">
-                </div>
-            </div>
-
-            <div class="flow-step">
-                <div class="flow-content">
-                    <span class="step-badge">Step 05</span>
-                    <h3>Voice ID Attendance</h3>
-                    <p>Switch to voice mode for a futuristic roll-call. Students speak sequentially, and our AI matches
-                        their unique voice signatures.</p>
-                </div>
-                <div class="flow-image">
-                    <img src="{{ url_for('static', filename='img/demo/snap-teacher-flow-5.1-voice-attendance.png') }}"
-                        alt="Voice Attendance">
-                </div>
-            </div>
-
-            <div class="flow-step">
-                <div class="flow-content">
-                    <span class="step-badge">Step 06</span>
-                    <h3>Actionable Records</h3>
-                    <p>Review and manage historical logs. View confidence scores, download CSV reports, and track
-                        long-term attendance trends.</p>
-                </div>
-                <div class="flow-image">
-                    <img src="{{ url_for('static', filename='img/demo/snap-teacher-flow-5-see-stored-records.png') }}"
-                        alt="Records Management">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="tech" class="tech-stack">
-        <div class="section-tag">— Our Backend —</div>
-        <h2>Advanced Tech Stack</h2>
-        <div class="tech-grid">
-            <div class="tech-item">
-                <div class="tech-card">
-                    <div class="t-icon">⚡</div>
-                    <div class="tech-info">
-                        <h4>Streamlit & Flask</h4>
-                        <p>Reactive frontend architecture paired with a robust Flask landing layer.</p>
-                    </div>
-                    <span class="tech-tag">Platform</span>
-                </div>
-            </div>
-            <div class="tech-item">
-                <div class="tech-card">
-                    <div class="t-icon">👁️</div>
-                    <div class="tech-info">
-                        <h4>Face Registration</h4>
-                        <p>Leveraging FaceRecognition and Dlib for high-fidelity facial biometrics.</p>
-                    </div>
-                    <span class="tech-tag">Vision AI</span>
-                </div>
-            </div>
-            <div class="tech-item">
-                <div class="tech-card">
-                    <div class="t-icon">🎙️</div>
-                    <div class="tech-info">
-                        <h4>Voice Embeddings</h4>
-                        <p>Utilizing Resemblyzer and Librosa for unique student voice signatures.</p>
-                    </div>
-                    <span class="tech-tag">Audio AI</span>
-                </div>
-            </div>
-            <div class="tech-item">
-                <div class="tech-card">
-                    <div class="t-icon">☁️</div>
-                    <div class="tech-info">
-                        <h4>Supabase Cloud</h4>
-                        <p>Real-time PostgreSQL infrastructure with secure auth and sync.</p>
-                    </div>
-                    <span class="tech-tag">Storage</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="student-journey" class="teacher-flow" style="background: white;">
-        <div class="flow-container">
-            <div class="section-tag" style="text-align: center; display: block; margin-bottom: 40px;">— Workflow —
-            </div>
-            <h2 style="text-align: center; font-size: 3.5rem; margin-bottom: 80px;">The Student's Journey</h2>
-
-            <div class="flow-step">
-                <div class="flow-content">
-                    <span class="step-badge">Phase 01</span>
-                    <h3>Instant Enrollment</h3>
-                    <p>Students join courses in seconds using unique QR codes or course links provided by their
-                        teachers. No tedious sign-up forms.</p>
-                </div>
-                <div class="flow-image">
-                    <img src="{{ url_for('static', filename='img/demo/snap-student-flow-1-login.png') }}"
-                        alt="Student Enrollment">
-                </div>
-            </div>
-
-            <div class="flow-step">
-                <div class="flow-content">
-                    <span class="step-badge">Phase 02</span>
-                    <h3>Biometric Registration</h3>
-                    <p>Students register their FaceID and VoiceID once. Our AI securely stores these biometrics for
-                        all future class sessions.</p>
-                </div>
-                <div class="flow-image">
-                    <img src="{{ url_for('static', filename='img/demo/snap-student-flow-2-enroll.png') }}"
-                        alt="Biometric Registration">
-                </div>
-            </div>
-
-            <div class="flow-step">
-                <div class="flow-content">
-                    <span class="step-badge">Phase 03</span>
-                    <h3>Personal Dashboard</h3>
-                    <p>A unified view for students to track their attendance percentage across all subjects and
-                        receive real-time updates.</p>
-                </div>
-                <div class="flow-image">
-                    <img src="{{ url_for('static', filename='img/demo/snap-student-flow-3-dashboard.png') }}"
-                        alt="Student Dashboard">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="purple-section">
-        <h2>Ready to upgrade your classroom?</h2>
-        <p>Join thousands of educators who have simplified their day with SnapClass. The smartest AI powered
-            attendance
-            system is just one click away.</p>
-        <a href="https://snapclass.streamlit.app/" class="btn-white">Start AI Attendance Now</a>
-    </section>
-
-    <footer class="main-footer">
-        <div class="footer-grid">
-            <div class="footer-brand">
-                <div class="logo">
-                    <img src="{{ url_for('static', filename='img/app_logo.png') }}" alt="SnapClass Logo">
-                    <div class="logo-text">SnapClass</div>
-                </div>
-                <p>The next generation of classroom management, powered by advanced AI biometrics. Join the future of
-                    education today.</p>
-            </div>
-
-            <div class="footer-links">
-                <h4>Product</h4>
-                <ul>
-                    <li><a href="#features">AI Attendance</a></li>
-                    <li><a href="#features">Smart Roster</a></li>
-                    <li><a href="#tech">Tech Stack</a></li>
-                    <li><a href="#student-journey">Student Portal</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-links">
-                <h4>Experience</h4>
-                <ul>
-                    <li><a href="#journey">Teacher Journey</a></li>
-                    <li><a href="#student-journey">Student Journey</a></li>
-                    <li><a href="#features">Voice ID Roll-call</a></li>
-                    <li><a href="#features">FaceID Scan</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-links">
-                <h4>Company</h4>
-                <ul>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">How it Works</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
-                    <li><a href="#">Terms of Use</a></li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="footer-bottom">
-            <p>&copy; 2026 SnapClass AI. Built with ❤️ for educators everywhere.</p>
-        </div>
-    </footer>
-
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    html.setAttribute('data-theme', html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    localStorage.setItem('sc-theme', html.getAttribute('data-theme'));
+  }
+  (function(){
+    const s = localStorage.getItem('sc-theme');
+    if (s) document.documentElement.setAttribute('data-theme', s);
+  })();
+</script>
 </body>
-
 </html>
